@@ -51,7 +51,7 @@ class ArduCamNode(Node):
         # Get left camera params
         self.declare_parameter('left_cam_info_file', 'left_cam_info.yaml')
         self._left_cam_info_file = self.get_parameter('left_cam_info_file').get_parameter_value().string_value
-
+        
         # Get right camera params
         self.declare_parameter('right_cam_info_file', 'right_cam_info.yaml')
         self._right_cam_info_file = self.get_parameter('right_cam_info_file').get_parameter_value().string_value
@@ -65,7 +65,7 @@ class ArduCamNode(Node):
         self.declare_parameter('width', 2560) # width of 2 images (concatenated horizontally)
         self._width = self.get_parameter('width').get_parameter_value().integer_value
 
-        self.declare_parameter('height', 720) # height of each image
+        self.declare_parameter('height', 800) # height of each image
         self._height = self.get_parameter('height').get_parameter_value().integer_value
 
         self.declare_parameter('frame_id', 'cam0')
@@ -225,7 +225,9 @@ class ArduCamNode(Node):
         # height = frame.shape[0]
 
         left_img = frame[:, :width//2]
+        left_img = cv2.flip(left_img, -1) 
         right_img = frame[:, width//2:]
+        right_img = cv2.flip(right_img, -1)         
 
         left_img_msg = self._cv_bridge.cv2_to_imgmsg(left_img, encoding)
         left_img_msg.header.frame_id = self._frame_id
