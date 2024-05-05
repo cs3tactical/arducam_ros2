@@ -225,9 +225,11 @@ class ArduCamNode(Node):
         # height = frame.shape[0]
 
         left_img = frame[:, :width//2]
-        left_img = cv2.flip(left_img, -1) 
+        if self._is_grey:
+            left_img = cv2.flip(left_img, -1) 
         right_img = frame[:, width//2:]
-        right_img = cv2.flip(right_img, -1)         
+        if self._is_grey:
+            right_img = cv2.flip(right_img, -1)         
 
         left_img_msg = self._cv_bridge.cv2_to_imgmsg(left_img, encoding)
         left_img_msg.header.frame_id = self._frame_id

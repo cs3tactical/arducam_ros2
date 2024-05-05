@@ -71,6 +71,13 @@ class ArducamUtils(object):
         v4l2.V4L2_PIX_FMT_SRGGB10:{ "depth":10, "cvt_code": cv2.COLOR_BAYER_BG2BGR, "convert2rgb": 0},
         v4l2.V4L2_PIX_FMT_Y10:{ "depth":10, "cvt_code": -1, "convert2rgb": 0},
     }
+    pixfmt_map_xavier_nx = {
+        v4l2.V4L2_PIX_FMT_SBGGR10:{ "depth":16, "cvt_code": cv2.COLOR_BAYER_RG2BGR, "convert2rgb": 0},
+        v4l2.V4L2_PIX_FMT_SGBRG10:{ "depth":16, "cvt_code": cv2.COLOR_BAYER_GR2BGR, "convert2rgb": 0},
+        v4l2.V4L2_PIX_FMT_SGRBG10:{ "depth":16, "cvt_code": cv2.COLOR_BAYER_GB2BGR, "convert2rgb": 0},
+        v4l2.V4L2_PIX_FMT_SRGGB10:{ "depth":16, "cvt_code": cv2.COLOR_BAYER_BG2BGR, "convert2rgb": 0},
+        v4l2.V4L2_PIX_FMT_Y10:{ "depth":16, "cvt_code": -1, "convert2rgb": 0},
+    }
 
     pixfmt_map_raw8 = {
         v4l2.V4L2_PIX_FMT_SBGGR8:{ "depth":8, "cvt_code": cv2.COLOR_BAYER_RG2BGR, "convert2rgb": 0},
@@ -93,6 +100,7 @@ class ArducamUtils(object):
     DEVICE_ID_REG            = (DEVICE_REG_BASE | 0x0003)
     FIRMWARE_SENSOR_ID_REG   = (DEVICE_REG_BASE | 0x0005)
     SERIAL_NUMBER_REG        = (DEVICE_REG_BASE | 0x0006)
+    CHANNEL_SWITCH_REG       = (DEVICE_REG_BASE | 0x0008)
 
     PIXFORMAT_INDEX_REG     = (PIXFORMAT_REG_BASE | 0x0000)
     PIXFORMAT_TYPE_REG      = (PIXFORMAT_REG_BASE | 0x0001)
@@ -119,6 +127,22 @@ class ArducamUtils(object):
     DEVICE_ID = 0x0030
 
     def __init__(self, device_num):
+        from jtop import jtop
+        with jtop() as jetson:
+            if jetson.ok():
+                for name_category, category in jetson.board.items():
+                    if name_category == "hardware":
+                        environment_vars = category['Module']
+        print("Hardware is: {}".format(environment_vars))
+        # Jetson Model
+        if "Xavier NX" in environment_vars:
+            ArducamUtils.pixfmt_map = ArducamUtils.pixfmt_map_xavier_nx
+        elif "Orin NX" in environment_vars:
+            ArducamUtils.pixfmt_map = ArducamUtils.pixfmt_map_xavier_nx
+        elif "Orin Nano" in environment_vars:
+            ArducamUtils.pixfmt_map = ArducamUtils.pixfmt_map_xavier_nx
+        elif "AGX Orin" in environment_vars:
+            ArducamUtils.pixfmt_map = ArducamUtils.pixfmt_map_xavier_nx
         self.vd = open('/dev/video{}'.format(device_num), 'w')
         self.refresh()
 
