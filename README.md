@@ -6,6 +6,7 @@ At the time of writing this package (June 2023), ROS 2 `humble` does not run dir
 
 # TODO
 (implement GrayWorld algorithm for color correction (also inside arducam displayer script))[https://stackoverflow.com/questions/46390779/automatic-white-balancing-with-grayworld-assumption]
+
 # Installation
 * Use a suitable Docker image according to your Jetpack version. See [jetson-containers](https://github.com/dusty-nv/jetson-containers)
 
