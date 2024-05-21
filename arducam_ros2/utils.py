@@ -145,6 +145,7 @@ class ArducamUtils(object):
             ArducamUtils.pixfmt_map = ArducamUtils.pixfmt_map_xavier_nx
         self.vd = open('/dev/video{}'.format(device_num), 'w')
         self.refresh()
+        print(self.config)
 
     def refresh(self):
         self.config = self.get_pixfmt_cfg()

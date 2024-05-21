@@ -16,7 +16,14 @@ setup(
         (os.path.join('share', package_name), glob('launch/*.[pxy][yma]*')),
         (os.path.join('share', package_name), glob('config/*.*')),
     ],
-    install_requires=['setuptools'],
+    # install_requires=['setuptools'],
+    install_requires=[
+        'setuptools',
+        'rclpy',
+        'sensor_msgs',
+        'cv_bridge',
+        'opencv-python'
+    ],
     zip_safe=True,
     maintainer='Mohamed Abdelkader',
     maintainer_email='mohamedashraf123@gmail.com',
@@ -26,6 +33,8 @@ setup(
     entry_points={
         'console_scripts': [
             'arducam_stereo = arducam_ros2.arducam_stereo:main',
+            'fake_stereo_camera_node = arducam_ros2.fake_stereo_camera_node:main',
+            'stereo_camera_node = arducam_ros2.stereo_camera_node:main'
         ],
     },
 )

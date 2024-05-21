@@ -4,8 +4,11 @@ This package interfaces Arducam cameras that support v4l2 to ROS 2
 **NOTE** This package is tested on Jetosn Xavier NX with Jetpack `L4T_VERSION=35.1.0`
 At the time of writing this package (June 2023), ROS 2 `humble` does not run directly on the host Jetson. It requires a docker container. You can use docker images from [jetson-containers](https://github.com/dusty-nv/jetson-containers)
 
+# TODO
+(implement GrayWorld algorithm for color correction (also inside arducam displayer script))[https://stackoverflow.com/questions/46390779/automatic-white-balancing-with-grayworld-assumption]
 # Installation
 * Use a suitable Docker image according to your Jetpack version. See [jetson-containers](https://github.com/dusty-nv/jetson-containers)
+
 * Install the Arducam drivers in your Jetson
     ```bash
     cd ~

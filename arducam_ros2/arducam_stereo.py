@@ -26,7 +26,7 @@ SOFTWARE.
 
 
 import rclpy
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from rclpy.node import Node
 from sensor_msgs.msg import CameraInfo
 import yaml
@@ -44,7 +44,11 @@ from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image, CameraInfo
 # from camera_info_manager import CameraInfoManager # !!! ROS 1 !!!
 import subprocess
-
+qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.RELIABLE,  # Ensure this matches the subscriber
+            durability=QoSDurabilityPolicy.VOLATILE,    # Ensure this matches the subscriber
+            depth=10  # Ensure this matches the subscriber
+        )
 class ArduCamNode(Node):
     def __init__(self):
         super().__init__('arducam_node')
@@ -108,11 +112,11 @@ class ArduCamNode(Node):
 
         # Publishers
         # CamInfo
-        self._left_cam_info_pub = self.create_publisher(CameraInfo, 'left/camera_info', qos_profile=qos_profile_sensor_data)
-        self._right_cam_info_pub = self.create_publisher(CameraInfo, 'right/camera_info', qos_profile=qos_profile_sensor_data)
+        self._left_cam_info_pub = self.create_publisher(CameraInfo, 'left/camera_info', qos_profile= qos)
+        self._right_cam_info_pub = self.create_publisher(CameraInfo, 'right/camera_info', qos_profile= qos)
         # Images
-        self._left_img_pub = self.create_publisher(Image, 'left/image_raw', qos_profile=qos_profile_sensor_data)
-        self._right_img_pub = self.create_publisher(Image, 'right/image_raw', qos_profile=qos_profile_sensor_data)
+        self._left_img_pub = self.create_publisher(Image, 'left/image_raw', qos_profile= qos)
+        self._right_img_pub = self.create_publisher(Image, 'right/image_raw', qos_profile= qos)
 
         # TODO We need to create a timer for the run() function
         fps = 0.01  # seconds. WARNING. this is limited by the actual camera FPS
