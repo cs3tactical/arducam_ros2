@@ -74,8 +74,11 @@ class ArduCamNode(Node):
         self.declare_parameter('height', 800) # height of each image
         self._height = self.get_parameter('height').get_parameter_value().integer_value
 
-        self.declare_parameter('frame_id', 'cam0')
-        self._frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
+        self.declare_parameter('frame_id_left', 'left_stereo_cam_link')
+        self._frame_id_left = self.get_parameter('frame_id_left').get_parameter_value().string_value
+
+        self.declare_parameter('frame_id_right', 'right_stereo_cam_link')
+        self._frame_id_right = self.get_parameter('frame_id_right').get_parameter_value().string_value
 
         # Set to True if you use monochrome image sensors. Set if RGB
         self.declare_parameter('is_grey', True)
@@ -274,20 +277,20 @@ class ArduCamNode(Node):
             right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
 
             left_image_msg = self._cv_bridge.cv2_to_imgmsg(left_image, encoding="mono8")
-            left_image_msg.header.frame_id = self._frame_id
+            left_image_msg.header.frame_id = self._frame_id_left
 
             right_image_msg = self._cv_bridge.cv2_to_imgmsg(right_image, encoding="mono8")
-            right_image_msg.header.frame_id = self._frame_id
+            right_image_msg.header.frame_id = self._frame_id_right
         else: # color
 
             left_image = self.gray_world(left_image)
             right_image = self.gray_world(right_image)
 
             left_image_msg = self._cv_bridge.cv2_to_imgmsg(left_image, encoding="bgr8")
-            left_image_msg.header.frame_id = self._frame_id
+            left_image_msg.header.frame_id = self._frame_id_left
 
             right_image_msg = self._cv_bridge.cv2_to_imgmsg(right_image, encoding="bgr8")
-            right_image_msg.header.frame_id = self._frame_id
+            right_image_msg.header.frame_id = self._frame_id_right
 
 
         left_image_msg.header.stamp = capture_time
@@ -302,8 +305,8 @@ class ArduCamNode(Node):
             self._left_cam_info_msg.header.stamp = capture_time
             self._right_cam_info_msg.header.stamp = capture_time
 
-            self._left_cam_info_msg.header.frame_id = self._frame_id
-            self._right_cam_info_msg.header.frame_id = self._frame_id
+            self._left_cam_info_msg.header.frame_id = self._frame_id_left
+            self._right_cam_info_msg.header.frame_id = self._frame_id_right
             self._left_cam_info_pub.publish(self._left_cam_info_msg)
             self._right_cam_info_pub.publish(self._right_cam_info_msg)
 
