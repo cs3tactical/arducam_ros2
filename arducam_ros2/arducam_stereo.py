@@ -243,7 +243,7 @@ class ArduCamNode(Node):
 
         frame = self._arducam_utils.convert(frame)
 
-        if self._is_grey:
+        if self._is_grey and len(frame.shape) == 3 and frame.shape[2] == 3:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         encoding = "bgr8" if len(frame.shape) == 3 and frame.shape[2] >= 3 else "mono8"
@@ -273,8 +273,9 @@ class ArduCamNode(Node):
             right_image = cv2.resize(right_image, (new_width, new_height))
 
         if self._out_grey:
-            left_image = cv2.cvtColor(left_image, cv2.COLOR_BGR2GRAY)
-            right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
+            if len(frame.shape) == 3 and frame.shape[2] == 3:
+                left_image = cv2.cvtColor(left_image, cv2.COLOR_BGR2GRAY)
+                right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
 
             left_image_msg = self._cv_bridge.cv2_to_imgmsg(left_image, encoding="mono8")
             left_image_msg.header.frame_id = self._frame_id_left
